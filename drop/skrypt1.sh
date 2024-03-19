@@ -45,22 +45,19 @@ res_x=$(identify -format '%w' "${file}")
 echo $res_x
 for i in *.jpg
 do
-	convert $i -pointsize 12 -draw "text 350,80 'TEKST'" text/$i
-	
-	convert text/$i -fill white -draw "rectangle 0,0 200,50" text/$i
-	convert text/$i -draw "text 20,15 'Aktualna data:'" text/$i
-	convert text/$i -draw "text 20,35 '$(date)'" text/$i
-	
-	convert text/$i -fill white -draw "rectangle $((res_x-200)),0 $((res_x)),50" text/$i
-	convert text/$i -draw "text $((res_x-180)),15 'Data utworzenia:'" text/$i
-	convert text/$i -draw "text $((res_x-180)),35 '${data_utworzenia}'" text/$i
+	convert $i -pointsize 12 -draw "text 350,80 'TEKST'" \
+	-fill white -draw "rectangle 0,0 200,50" \
+	-fill black -draw "text 20,15 'Aktualna data:'" \
+	-draw "text 20,35 '$(date)'" \
+	-fill white -draw "rectangle $((res_x-200)),0 $((res_x)),50" \
+	-fill black -draw "text $((res_x-180)),15 'Data utworzenia:'" \
+	-draw "text $((res_x-180)),35 '${data_utworzenia}'" text/$i
 
 done
 echo "Done 5) 6) 7)"
 
 convert text/*.jpg animacja.gif
 echo "Done 8)"
-
 
 
 

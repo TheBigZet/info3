@@ -3,7 +3,7 @@
 #Kopiowanie wszystkiego do nowego folderu żeby nie popsuć orginałów
 rm -r temp
 mkdir temp
-cp drop-00*.jpg ./temp/ 
+cp drop-*.jpg ./temp/ 
 cd temp
 
 #Pierwsza kropka
@@ -30,23 +30,36 @@ do
 	convert $i gify/$bez_rozszerzenia.gif 
 done
 echo "Done 4)"
-#Piąta kropka
+
+#Piąta szósta i siódma kropka
 mkdir text
-files=$(ls *.jpg | head -1) #alleluja zajęło mi to 20 minut
-echo $files
-size_x=$(stat -c %y "${files}")
-echo $size_x
+#Odczytanie nazwy pierwszego, niezmodyfikowanego pliku
+file=$(ls ../*.jpg | head -1) #alleluja zajęło mi to 20 minut
+echo $file
+#Odczytanie daty utworzenia pliku
+data_utworzenia=$(stat -c %y "${file}")
+echo $data_utworzenia
+#Odczywanie rozmiaru x zdjęcia
+file=$(ls *.jpg | head -1) #tym razem z katalogu temp, b0 zdjęcia są pomniejszone względem orginału
+res_x=$(identify -format '%w' "${file}")
+echo $res_x
 for i in *.jpg
 do
-	convert $i -pointsize 12 -draw "text 500,30 'TEKST'" text/$i
-	convert text/$i -fill white -draw "rectangle 0,0 200,50" text/$i
+	convert $i -pointsize 12 -draw "text 350,80 'TEKST'" text/$i
 	
+	convert text/$i -fill white -draw "rectangle 0,0 200,50" text/$i
 	convert text/$i -draw "text 20,15 'Aktualna data:'" text/$i
 	convert text/$i -draw "text 20,35 '$(date)'" text/$i
-	#convert $i -border 20x20 -pointsize 2 -draw "text 0, 0 '$aktualna_data'" $i
-done
-echo "Done 5)"
+	
+	convert text/$i -fill white -draw "rectangle $((res_x-200)),0 $((res_x)),50" text/$i
+	convert text/$i -draw "text $((res_x-180)),15 'Data utworzenia:'" text/$i
+	convert text/$i -draw "text $((res_x-180)),35 '${data_utworzenia}'" text/$i
 
+done
+echo "Done 5) 6) 7)"
+
+convert text/*.jpg animacja.gif
+echo "Done 8)"
 
 
 
